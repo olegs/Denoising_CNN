@@ -173,5 +173,8 @@ def make_prediction_and_bw(chrom, y_impl_prediction, df_y_impl, f_prediction_nam
     df_res = pd.concat([df, pd.DataFrame(y_impl_prediction.reshape(-1,1)), pd.DataFrame(df_y_impl.reshape(-1,1))], axis=1)
     df_res.columns = ['col_n', 'chr', 'start', 'end', 'cnt', 'cnt_target']
     df_res[['chr', 'start', 'end', 'cnt']].to_csv(DATA_PATH + 'bedgraph_out.bedgraph', sep='\t', na_rep='', float_format=None, columns=None, header=None, index=False)
-    call('bedGraphToBigWig %sbedgraph_out.bedgraph %s %s' %(DATA_PATH, BEDTOOLS_PATH, f_prediction_name), shell = True)
+    try:
+        call('bedGraphToBigWig %sbedgraph_out.bedgraph %s %s' %(DATA_PATH, BEDTOOLS_PATH, f_prediction_name), shell = True)
+    except:
+        pass
     return r2_impl
