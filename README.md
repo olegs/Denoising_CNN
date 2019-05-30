@@ -1,7 +1,7 @@
 DCNN
 =====================
 
-DCNN is a tool for improving of Ultra Low input ChIP-Seq data quality (increasing the signal-to-noise ratio).
+DCNN is an algorithm designed for improving of Ultra Low input ChIP-Seq data quality (increasing the signal-to-noise ratio).
 
 The operation of this algorithm includes two states: the construction of a neural network and its application to improve the quality of data. 
 
