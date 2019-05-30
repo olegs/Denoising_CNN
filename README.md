@@ -7,12 +7,12 @@ The operation of this algorithm includes two states: the construction of a neura
 
 Before the program is executed, the corresponding directories CODA_PATH and BEDTOOLS_PATH(for pre-processing and final bigwig creation) in the constants.py must be indicated.
 
-Training a convolution neural network (CNN)
+Training convolution neural network (CNN)
 -----------------------------------
 
-For learning a neural network, there are 2 options, use the data from https://artyomovlab.wustl.edu/publications/supp_materials/aging/chipseq/Y20O20/bedgz/ or upload your own data (bedgraph format) and train a neural network on them.
+For learning a neural network, there are two options, use the data from https://artyomovlab.wustl.edu/publications/supp_materials/aging/chipseq/Y20O20/bedgz/ or upload your own data (bedgraph format) and train a neural network on it.
 
-### training a CNN with Artyomov Lab data preprocessing
+### CNN with Artyomov Lab data preprocessing
 
 Preprocessing requires pre-installed and suggested adding installation directory to the PATH variable:
 bedToBam (https://bedtools.readthedocs.io/en/latest/content/tools/bedtobam.html), 
@@ -32,9 +32,9 @@ the output name for model MODEL_NAME_2
 3) run train_w_data_preprocessing(HISTONE_TARGET, HELPERS, CHROM_TRAIN, N_TRAIN_2, MODEL_NAME_2) from main.ipynb
 
 
-### training a CNN with your own data
+### CNN with your own data
 
-1) Configure CODA_PATH in constants.py
+1) Configure CODA_PATH in constants.py and download your data(files in begraph format) to DATA_PATH
 
 2) specify:
 X_FILES_IMPL: array with directions to data files(.bedggraph), the first one is target for quallity improvement, other are helpers
@@ -45,10 +45,49 @@ the output name for model MODEL_NAME_1
 3) run train_wout_data_preprocessing(X_FILES_IMPL, Y_FILE, N_TRAIN_1, MODEL_NAME_1) from main.ipynb
 
 
+CNN applying
+-----------------------------------
 
-Download test pre-prepared data:
-data for learning and using the neural network can be downloaded: https://drive.google.com/file/d/1Xr1jWlSKiHWnUmHIHc5LrE2kv-H3Lf_q/view?usp=sharing, then they have to be unzipped and placed in the DATA_PATH directory
+For CNN applying there are two options, use the data from https://artyomovlab.wustl.edu/publications/supp_materials/aging/chipseq/Y20O20/bedgz/ or upload your own data (bedgraph format) and train a neural network on it.
 
-Preliminary data preparation with https://artyomovlab.wustl.edu:
-1) for the preliminary preparation of the presence of bedToBam, samtools, bamCoverage, bedGraphToBigWig
-2) run main (preprocessing = true) in main.ipynb
+### CNN applying with Artyomov Lab data preprocessing
+
+Preprocessing requires pre-installed and suggested adding installation directory to the PATH variable:
+bedToBam (https://bedtools.readthedocs.io/en/latest/content/tools/bedtobam.html), 
+samtools (http://samtools.sourceforge.net/), 
+deepTools (https://github.com/deeptools/deepTools/blob/develop/docs/content/tools/bamCoverage.rst)
+bedGraphToBigWig (https://github.com/ENCODE-DCC/kentUtils)
+
+1) Configure CODA_PATH and BEDTOOLS_PATH in constants.py 
+
+2) specify: 
+the target applying histine modification HISTONE_IMPL
+histone modifications(same as in trained model) for model prediction quality improvement HELPERS_IMPL 
+chromosome for implementation CHROM_IMPL
+pre-trained model MODEL_IMPL_NAME_2
+the output name for bigwig OUT_BW_NAME_2
+basepairs bounds for implementation BOUNDS_IMPL_2 = {'start': int, 'end': int} or BOUNDS_IMPL_2 = None
+
+3) run apply_w_data_preprocessing(HISTONE_IMPL, HELPERS_IMPL, CHROM_IMPL, 
+                           MODEL_IMPL_NAME_2, OUT_BW_NAME_2, 
+                           bounds = BOUNDS_IMPL_2) 
+from main.ipynb
+
+### CNN applying with your own data
+
+For BigWig creation requires pre-installed (and suggested adding installation directory to the PATH variable):
+bedGraphToBigWig (https://github.com/ENCODE-DCC/kentUtils)
+
+1) Configure CODA_PATH in constants.py and download your data(files in begraph format) to DATA_PATH
+
+2) specify:
+X_FILES_IMPL: array with directions to data files(.bedggraph), the first one is target for quallity improvement, other are helpers
+Y_FILE_CHECK: directions to data file(.bedggraph) of good quality track for the comparison with the result of CNN
+pre-trained model MODEL_IMPL_NAME_1
+the output name for bigwig OUT_BW_NAME_1
+basepairs bounds for implementation BOUNDS_IMPL_1 = {'start': int, 'end': int} or BOUNDS_IMPL_1 = None
+
+3) run apply_wout_data_preprocessing(X_FILES_IMPL, Y_FILE_CHECK, 
+                              MODEL_IMPL_NAME_1, OUT_BW_NAME_1, 
+                              bounds = BOUNDS_IMPL_1)
+from main.ipynb
