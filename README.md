@@ -5,14 +5,24 @@ DCNN is a tool for improving of Ultra Low input ChIP-Seq data quality (increasin
 
 The operation of this algorithm includes two states: the construction of a neural network and its application to improve the quality of data. 
 
+
+## Prerequisites
+1. python3.6 interpretator
+2. bedToBam (https://bedtools.readthedocs.io/en/latest/content/tools/bedtobam.html), 
+3. samtools (http://samtools.sourceforge.net/), 
+4. deepTools (https://github.com/deeptools/deepTools/blob/develop/docs/content/tools/bamCoverage.rst)
+5. bedGraphToBigWig (https://github.com/ENCODE-DCC/kentUtils)
+
 Before the program is executed, the corresponding directories CODA_PATH and BEDTOOLS_PATH(for pre-processing and final bigwig creation) in the constants.py must be indicated.
+
 
 Training convolution neural network (CNN)
 -----------------------------------
 
 For learning a neural network, there are two options, use the data from https://artyomovlab.wustl.edu/publications/supp_materials/aging/chipseq/Y20O20/bedgz/ or upload your own data (bedgraph format) and train a neural network on it.
 
-### CNN with Artyomov Lab data preprocessing
+
+### CNN with ArtyomovLab data preprocessing
 
 Preprocessing requires pre-installed and suggested adding installation directory to the PATH variable:
 bedToBam (https://bedtools.readthedocs.io/en/latest/content/tools/bedtobam.html), 
@@ -50,7 +60,8 @@ CNN applying
 
 For CNN applying there are two options, use the data from https://artyomovlab.wustl.edu/publications/supp_materials/aging/chipseq/Y20O20/bedgz/ or upload your own data (bedgraph format) and train a neural network on it.
 
-### CNN applying with Artyomov Lab data preprocessing
+
+### CNN applying with ArtyomovLab data preprocessing
 
 Preprocessing requires pre-installed and suggested adding installation directory to the PATH variable:
 bedToBam (https://bedtools.readthedocs.io/en/latest/content/tools/bedtobam.html), 
@@ -73,6 +84,7 @@ basepairs bounds for implementation BOUNDS_IMPL_2 = {'start': int, 'end': int} o
                            bounds = BOUNDS_IMPL_2) 
 from main.ipynb
 
+
 ### CNN applying with your own data
 
 For BigWig creation requires pre-installed (and suggested adding installation directory to the PATH variable):
@@ -91,3 +103,8 @@ basepairs bounds for implementation BOUNDS_IMPL_1 = {'start': int, 'end': int} o
                               MODEL_IMPL_NAME_1, OUT_BW_NAME_1, 
                               bounds = BOUNDS_IMPL_1)
 from main.ipynb
+
+
+### run test data
+
+data to run tests in main can be downloaded from https://drive.google.com/drive/folders/1NAVdy3tu_liG9cqEkYCcT1kgfXoqeo32?usp=sharing and required to be in DATA_PATH direction
