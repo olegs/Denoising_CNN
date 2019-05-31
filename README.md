@@ -93,7 +93,7 @@ bedGraphToBigWig (https://github.com/ENCODE-DCC/kentUtils)
 
 1) Configure CODA_PATH in constants.py and download your data(files in begraph format) to DATA_PATH
 
-2) specify:
+2) specify:  
 X_FILES_IMPL: array with directions to data files(.bedggraph), the first one is target for quallity improvement, other are helpers<br/>
 Y_FILE_CHECK: directions to data file(.bedggraph) of good quality track for the comparison with the result of CNN<br/> 
 pre-trained model MODEL_IMPL_NAME_1<br/>
