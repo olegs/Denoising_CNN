@@ -111,7 +111,7 @@ from main.ipynb
 
 ### run test data
 
-data to run tests in main can be downloaded from https://drive.google.com/drive/folders/1NAVdy3tu_liG9cqEkYCcT1kgfXoqeo32?usp=sharing and required to be in DATA_PATH direction
+data to run tests in main can be downloaded from https://drive.google.com/drive/folders/1NAVdy3tu_liG9cqEkYCcT1kgfXoqeo32?usp=sharing and required to be in 'CODA_PATH/data' direction
 
 References
 -----------------------------------
