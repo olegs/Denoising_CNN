@@ -12,6 +12,10 @@ import preprocess_data
 importlib.reload(preprocess_data)
 from preprocess_data import *
 
+import cnn_model
+importlib.reload(cnn_model)
+from cnn_model import create_cnn
+
 from keras.models import load_model
 
 
@@ -129,7 +133,7 @@ input: check_impl_f – str, implementation check path+filename
 '''
 
 def model_implementation(model_name, hist_impl_f, helpers_impl_f, bounds_impl = None, check_impl_f = None, bw_name = 'prediction.bw'): 
-    
+    print('!!', bw_name)
     if bounds_impl != None:
         hist_impl_f = create_sub_bedgraph(hist_impl_f, bounds_impl['start'], bounds_impl['end'])
         #bw_name = '.sub_'+str(bounds_impl['start'])+'_'+str(bounds_impl['end'])
@@ -146,7 +150,7 @@ def model_implementation(model_name, hist_impl_f, helpers_impl_f, bounds_impl = 
     data = pd.read_csv(hist_impl_f, sep='\t', header = None, dtype={1: int, 2: int, 3: int})
     chrom_impl = data[0][0]
     
-    make_prediction_and_bw(chrom_impl, y_impl_prediction, df_y_impl, OUTPUT_PATH + bw_name, rows_impl)
+    make_prediction_and_bw(chrom_impl, y_impl_prediction, df_y_impl, bw_name, rows_impl)
     
     x_impl_cnt = create_df(files = [hist_impl_f], window_len = 1, rows = rows_impl)[0]
     
@@ -169,6 +173,7 @@ def model_implementation(model_name, hist_impl_f, helpers_impl_f, bounds_impl = 
         
         
 def make_prediction_and_bw(chrom, y_impl_prediction, df_y_impl, f_prediction_name, rows_impl):
+    print(f_prediction_name)
     r2_impl = r2_score(df_y_impl.reshape(1,-1), y_impl_prediction.reshape(1,-1))
     d = {'col_n': rows_impl}
     df = pd.DataFrame(data = d)
@@ -177,11 +182,71 @@ def make_prediction_and_bw(chrom, y_impl_prediction, df_y_impl, f_prediction_nam
     df['end'] = df.apply(lambda x: (x.col_n+1)*BATCH, axis=1)
     df_res = pd.concat([df, pd.DataFrame(y_impl_prediction.reshape(-1,1)), pd.DataFrame(df_y_impl.reshape(-1,1))], axis=1)
     df_res.columns = ['col_n', 'chr', 'start', 'end', 'cnt', 'cnt_target']
-    df_res[['chr', 'start', 'end', 'cnt']].to_csv(DATA_PATH + 'bedgraph_out.bedgraph', sep='\t', na_rep='', float_format=None, columns=None, header=None, index=False)
+    df_res[['chr', 'start', 'end', 'cnt']].to_csv(OUTPUT_PATH + f_prediction_name+'.bedgraph', sep='\t', na_rep='', float_format=None, columns=None, header=None, index=False)
     print(f_prediction_name)
     try:
-        call('bedGraphToBigWig %sbedgraph_out.bedgraph %s %s' %(DATA_PATH, BEDTOOLS_PATH, f_prediction_name), shell = True)
+        call('bedGraphToBigWig %s%s.bedgraph %s %s%s.bw' %(OUTPUT_PATH, f_prediction_name, BEDTOOLS_PATH, OUTPUT_PATH, f_prediction_name), shell = True)
         print('called')
     except:
         pass
     return r2_impl
+
+
+#training CNN steps
+def train_cnn(preprocessing = False, 
+              X_files = None, y_file = None, 
+              histone_target = None, helpers = None, chrom_train = None, name_exp = NAME_EXP, quality_percent = 0.2,
+              w = W, n_train = None, model_output_name = 'CNN.h5'):   
+    if preprocessing == True:
+        X_files, y_file = create_subs_data(histone_target, helpers, chrom_train, name_exp, 'train', quality_percent)
+        print(X_files[0], SNR(X_files[0]))
+        print(y_file, SNR(y_file))
+    X_df, y_df = process_model_df(X_files, y_file, w, n_train)
+    model = create_cnn(X_df, y_df , model_output_name)
+
+    
+#applying CNN steps
+def apply_cnn(preprocessing = False,
+              bounds_impl = None, 
+              X_files_impl = None, y_file_impl = None, 
+              histone_impl = None, helpers = None, chrom_impl = None, name_exp = NAME_EXP, quality_percent = 0.2,
+              model_name = 'CNN.h5', output_bw_name = 'prediction.bw'):
+    if preprocessing == True:
+        X_files_impl, y_file_impl = create_subs_data(histone_impl, helpers, chrom_impl, name_exp, 'impl', quality_percent)
+        print(X_files_impl[0], SNR(X_files_impl[0]))
+        print(y_file_impl, SNR(y_file_impl))
+    model_implementation(model_name, X_files_impl[0], X_files_impl[1:],  bounds_impl, y_file_impl, output_bw_name)
+    
+    
+#traing CNN without data preprocessing
+def train_wout_data_preprocessing(X_FILES_IMPL, Y_FILE, N_TRAIN_1, MODEL_NAME_1):    
+    train_cnn(preprocessing = False, 
+              X_files = X_FILES_IMPL, 
+              y_file = Y_FILE, 
+              n_train = N_TRAIN_1, 
+              model_output_name = MODEL_NAME_1)
+
+#traing CNN with data preprocessing
+def train_w_data_preprocessing(HISTONE_TARGET, HELPERS, CHROM_TRAIN, N_TRAIN_2, MODEL_NAME_2):   
+    train_cnn(preprocessing = True, 
+              histone_target = HISTONE_TARGET, 
+              helpers = HELPERS, 
+              chrom_train = CHROM_TRAIN, 
+              n_train = N_TRAIN_2, 
+              model_output_name = MODEL_NAME_2)
+    
+#applying CNN without data preprocessing    
+def apply_wout_data_preprocessing(X_FILES_IMPL, Y_FILE_CHECK, MODEL_IMPL_NAME_1, OUT_BW_NAME_1, bounds = None):      
+    apply_cnn(preprocessing = False,
+              bounds_impl = bounds, 
+              X_files_impl = X_FILES_IMPL, y_file_impl = Y_FILE_CHECK,
+              model_name = MODEL_IMPL_NAME_1,
+              output_bw_name = OUT_BW_NAME_1)
+
+#applying CNN with data preprocessing        
+def apply_w_data_preprocessing(HISTONE_IMPL, HELPERS_IMPL, CHROM_IMPL, MODEL_IMPL_NAME_2, OUT_BW_NAME_2, bounds = None):      
+    apply_cnn(preprocessing = True,
+              bounds_impl = bounds, 
+              histone_impl = HISTONE_IMPL, helpers = HELPERS_IMPL, chrom_impl = CHROM_IMPL,
+              model_name = MODEL_IMPL_NAME_2,
+              output_bw_name = OUT_BW_NAME_2)

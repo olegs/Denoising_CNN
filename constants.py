@@ -1,6 +1,6 @@
 from subprocess import call
 
-CODA_PATH = '/Users/dashabalashova/0_python_projects/DCNN_2/'
+CODA_PATH = '/Users/dashabalashova/0_python_projects/DCNN_3/'
 BEDTOOLS_PATH = '/Users/dashabalashova/ngs_2/bedtools2/genomes/human.hg19.genome'
 
 DATA_PATH = CODA_PATH + 'data/'
