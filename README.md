@@ -3,14 +3,17 @@ DCNN
 
 DCNN is an algorithm designed for improving of Ultra Low input ChIP-Seq data quality (increasing the signal-to-noise ratio).
 
-The operation of this algorithm includes two states: the construction of a neural network and its application to improve the quality of data. 
+It is possible to use the algorithm in two states: training the convolutional neural network and its applications to improve the quality of the histone modification data (signal-to-noise ratio indicator).
 
+For training, it is possible to launch both on the pre-prepared data in the bedgraph format (a detailed presentation is indicated in the main.ipynb file) and without preliminary preparation. In this case, the target histone modifications are input to the model, then there is an automatic download from the site and further training of the model. As a result of this step of the algorithm, a file is obtained in .h5 format in the directory 'CODA_PATH/output'.
+
+To use the model, it is also possible to run both on the pre-prepared data in the bedgraph format (a detailed presentation is indicated in the main.ipynb file) and without prior preparation. After launching the corresponding step, the files '.bedgraph' and '.bw' are generated in the directory 'CODA_PATH/output'.
 
 ## Prerequisites
-1. python3.6 interpretator
-2. bedToBam (https://bedtools.readthedocs.io/en/latest/content/tools/bedtobam.html), 
-3. samtools (http://samtools.sourceforge.net/), 
-4. deepTools (https://github.com/deeptools/deepTools/blob/develop/docs/content/tools/bamCoverage.rst)
+1. python 3.6 interpretator
+2. bedToBam 2.28.0 (https://bedtools.readthedocs.io/en/latest/content/tools/bedtobam.html), 
+3. samtools 1.9 (http://samtools.sourceforge.net/), 
+4. deepTools 2.0 (https://github.com/deeptools/deepTools/blob/develop/docs/content/tools/bamCoverage.rst)
 5. bedGraphToBigWig (https://github.com/ENCODE-DCC/kentUtils)
 
 Before the program is executed, the corresponding directories CODA_PATH and BEDTOOLS_PATH(for pre-processing and final bigwig creation) in the constants.py must be indicated.
