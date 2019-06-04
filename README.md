@@ -48,7 +48,7 @@ the output name for model MODEL_NAME_2
 1) Configure CODA_PATH in constants.py and download your data(files in begraph format) to DATA_PATH
 
 2) specify:  
-X_FILES_IMPL: array with directions to data files(.bedggraph), the first one is target for quallity improvement, other are helpers<br/>
+X_FILES: array with directions to data files(.bedggraph), the first one is target for quallity improvement, other are helpers<br/>
 Y_FILE: directions to data file(.bedggraph) of good quality track for CNN training<br/>
 the amount of data for training N_TRAIN_1<br/>
 the output name for model MODEL_NAME_1<br/>
