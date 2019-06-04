@@ -3,11 +3,11 @@ DCNN
 
 DCNN is an algorithm designed for improving of Ultra Low input ChIP-Seq data quality (increasing the signal-to-noise ratio).
 
-It is possible to use the algorithm in two states: training the convolutional neural network and its applications to improve the quality of the histone modification data (signal-to-noise ratio indicator).
+It is possible to use the algorithm in two states: training of the convolutional neural network and its applications to improve the quality of the histone modification data (signal-to-noise ratio indicator).
 
-For training, it is possible to launch both on the pre-prepared data in the bedgraph format (a detailed presentation is indicated in the main.ipynb file) and without preliminary preparation. In this case, the target histone modifications are input to the model, then there is an automatic download from the site and further training of the model. As a result of this step of the algorithm, a file is obtained in .h5 format in the directory 'CODA_PATH/output'.
+For training, it is possible to launch both on the preprocessed data in the .bedgraph format (detailed requirements are indicated in the main.ipynb) and without preliminary preparation(in this case, the target histone modifications are input to the model, then there is an automatic download from the https://artyomovlab.wustl.edu) and further training of the model. As a result of this step of the algorithm, the CNN model file in .h5 format is obtained in the directory 'CODA_PATH/models'.
 
-To use the model, it is also possible to run both on the pre-prepared data in the bedgraph format (a detailed presentation is indicated in the main.ipynb file) and without prior preparation. After launching the corresponding step, the files '.bedgraph' and '.bw' are generated in the directory 'CODA_PATH/output'.
+To use the model, it is also possible to run both on the pre-prepared data in the bedgraph format (detailed requirements are indicated in the main.ipynb) and without prior preparation(in this case, the target histone modifications are input to the model, then there is an automatic download from the https://artyomovlab.wustl.edu). After launching the corresponding step, the files in .bedgraph and .bw formats are generated in the directory 'CODA_PATH/output'.
 
 ## Prerequisites
 1. python 3.6 interpretator
@@ -80,7 +80,7 @@ the target applying histine modification HISTONE_IMPL<br/>
 histone modifications(same as in trained model) for model prediction quality improvement HELPERS_IMPL<br/> 
 chromosome for implementation CHROM_IMPL<br/>
 pre-trained model MODEL_IMPL_NAME_2<br/>
-the output name for bigwig OUT_BW_NAME_2<br/> 
+the output name for bigwig OUT_NAME_2<br/> 
 basepairs bounds for implementation BOUNDS_IMPL_2 = {'start': int, 'end': int} or BOUNDS_IMPL_2 = None
 
 3) run apply_w_data_preprocessing(HISTONE_IMPL, HELPERS_IMPL, CHROM_IMPL, 
@@ -100,7 +100,7 @@ bedGraphToBigWig (https://github.com/ENCODE-DCC/kentUtils)
 X_FILES_IMPL: array with directions to data files(.bedggraph), the first one is target for quallity improvement, other are helpers<br/>
 Y_FILE_CHECK: directions to data file(.bedggraph) of good quality track for the comparison with the result of CNN<br/> 
 pre-trained model MODEL_IMPL_NAME_1<br/>
-the output name for bigwig OUT_BW_NAME_1<br/>
+the output name for bigwig OUT_NAME_1<br/>
 basepairs bounds for implementation BOUNDS_IMPL_1 = {'start': int, 'end': int} or BOUNDS_IMPL_1 = None
 
 3) run apply_wout_data_preprocessing(X_FILES_IMPL, Y_FILE_CHECK, 
